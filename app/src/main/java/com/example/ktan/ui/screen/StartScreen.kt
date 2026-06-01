@@ -2,7 +2,9 @@ package com.example.ktan.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,6 +23,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 fun StartScreen(onStartGame: (String, Int) -> Unit) {
     var playerCount by rememberSaveable { mutableIntStateOf(3) }
     var expanded by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
 
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -32,44 +35,45 @@ fun StartScreen(onStartGame: (String, Int) -> Unit) {
                 Brush.verticalGradient(
                     colors = listOf(Color(0xFF5D1D09), Color(0xFF2E0A05))
                 )
-            ),
-        contentAlignment = Alignment.Center
+            )
     ) {
-        if (isLandscape) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(32.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Text(
-                    text = "K'TAN",
-                    color = Color(0xFFF1C40F),
-                    fontSize = 60.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    style = MaterialTheme.typography.displayLarge
-                )
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(vertical = 32.dp, horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            if (isLandscape) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    ModeSelector(
-                        playerCount = playerCount,
-                        expanded = expanded,
-                        onExpandRequest = { expanded = it },
-                        onPlayerCountChange = { playerCount = it },
-                        onStartGame = onStartGame
+                    Text(
+                        text = "K'TAN",
+                        color = Color(0xFFF1C40F),
+                        fontSize = 70.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        style = MaterialTheme.typography.displayLarge
                     )
+
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.width(300.dp)
+                    ) {
+                        ModeSelector(
+                            playerCount = playerCount,
+                            expanded = expanded,
+                            onExpandRequest = { expanded = it },
+                            onPlayerCountChange = { playerCount = it },
+                            onStartGame = onStartGame
+                        )
+                    }
                 }
-            }
-        } else {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(16.dp)
-            ) {
+            } else {
                 Text(
                     text = "K'TAN",
                     color = Color(0xFFF1C40F),
@@ -155,7 +159,7 @@ fun ModeSelector(
         }
     }
 
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(12.dp))
 
     Button(
         onClick = { onStartGame("classic", playerCount) },
@@ -171,15 +175,15 @@ fun ModeSelector(
         Text("COMMENCER LA PARTIE", fontSize = 14.sp, fontWeight = FontWeight.ExtraBold)
     }
 
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(12.dp))
     HorizontalDivider(modifier = Modifier.width(200.dp), color = Color.White.copy(alpha = 0.1f))
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(12.dp))
 
     Button(
         onClick = { onStartGame("demo", 3) },
         modifier = Modifier
             .width(280.dp)
-            .height(60.dp),
+            .height(56.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color(0xFF2E0A05),
             contentColor = Color(0xFFF1C40F)
@@ -190,13 +194,13 @@ fun ModeSelector(
         Text("DÉMONSTRATION", fontSize = 16.sp, fontWeight = FontWeight.Bold)
     }
 
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(12.dp))
 
     Button(
         onClick = { onStartGame("tutorial", 1) },
         modifier = Modifier
             .width(280.dp)
-            .height(60.dp),
+            .height(56.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color(0xFF2563EB),
             contentColor = Color.White
@@ -204,5 +208,21 @@ fun ModeSelector(
         shape = RoundedCornerShape(12.dp)
     ) {
         Text("TUTORIEL", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+    }
+
+    Spacer(modifier = Modifier.height(12.dp))
+
+    Button(
+        onClick = { onStartGame("online", 3) },
+        modifier = Modifier
+            .width(280.dp)
+            .height(56.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xFF9333EA),
+            contentColor = Color.White
+        ),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Text("🌍 EN LIGNE", fontSize = 16.sp, fontWeight = FontWeight.Bold)
     }
 }

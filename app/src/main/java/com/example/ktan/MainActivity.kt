@@ -12,6 +12,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ktan.ui.screen.BoardScreen
 import com.example.ktan.ui.screen.GameViewModel
 import com.example.ktan.ui.screen.StartScreen
+import com.example.ktan.ui.screen.OnlineLobbyScreen
+
+enum class GameScreen { START, BOARD, ONLINE_LOBBY }
 
 class MainActivity : ComponentActivity() {
 
@@ -20,15 +23,32 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 val viewModel: GameViewModel = viewModel()
-                var gameStarted by rememberSaveable { mutableStateOf(false) }
+                var currentScreen by rememberSaveable { mutableStateOf(GameScreen.START) }
 
-                if (!gameStarted) {
-                    StartScreen(onStartGame = { mode, count ->
-                        viewModel.startGame(mode, count)
-                        gameStarted = true
-                    })
-                } else {
-                    BoardScreen(viewModel = viewModel, onQuit = { gameStarted = false })
+                when (currentScreen) {
+                    GameScreen.START -> {
+                        StartScreen(onStartGame = { mode, count ->
+                            if (mode == "online") {
+                                currentScreen = GameScreen.ONLINE_LOBBY
+                            } else {
+                                viewModel.startGame(mode, count)
+                                currentScreen = GameScreen.BOARD
+                            }
+                        })
+                    }
+                    GameScreen.BOARD -> {
+                        BoardScreen(viewModel = viewModel, onQuit = { currentScreen = GameScreen.START })
+                    }
+                    GameScreen.ONLINE_LOBBY -> {
+                        OnlineLobbyScreen(
+                            onBack = { currentScreen = GameScreen.START },
+                            onJoinRoom = { _ ->
+                                // For now, just start a classic game as a mock for joining
+                                viewModel.startGame("classic", 3)
+                                currentScreen = GameScreen.BOARD
+                            }
+                        )
+                    }
                 }
             }
         }
