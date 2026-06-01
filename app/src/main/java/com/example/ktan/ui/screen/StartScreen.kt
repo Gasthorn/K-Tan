@@ -189,4 +189,20 @@ fun ModeSelector(
     ) {
         Text("DÉMONSTRATION", fontSize = 16.sp, fontWeight = FontWeight.Bold)
     }
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    Button(
+        onClick = { onStartGame("tutorial", 1) },
+        modifier = Modifier
+            .width(280.dp)
+            .height(60.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xFF2563EB),
+            contentColor = Color.White
+        ),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Text("TUTORIEL", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+    }
 }

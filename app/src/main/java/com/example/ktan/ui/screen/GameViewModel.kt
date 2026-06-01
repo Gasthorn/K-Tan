@@ -39,6 +39,10 @@ class GameViewModel : ViewModel() {
         private set
     var showMonopolySelection by mutableStateOf(false)
         private set
+    var tutorialMessage by mutableStateOf<String?>(null)
+        private set
+    private var tutorialStep = 0
+    private var isTutorialMode = false
 
     init {
         // Default init for classic 3 players
@@ -64,11 +68,39 @@ class GameViewModel : ViewModel() {
     }
 
     fun startGame(mode: String, playerCount: Int = 3) {
-        state = if (mode == "demo") demoGame() else newGame(playerCount)
+        isTutorialMode = mode == "tutorial"
+        state = when (mode) {
+            "demo" -> demoGame()
+            "tutorial" -> tutorialGame()
+            else -> newGame(playerCount)
+        }
         placementStep = 0
-        setupPlacementSequence(if (mode == "demo") 3 else playerCount)
+        setupPlacementSequence(if (mode == "classic") playerCount else if (mode == "tutorial") 1 else 3)
         stopBuilding()
         updateBuildingModes()
+        
+        if (isTutorialMode) {
+            tutorialStep = 0
+            showTutorialStep()
+        } else {
+            tutorialMessage = null
+        }
+    }
+
+    private fun showTutorialStep() {
+        tutorialMessage = when (tutorialStep) {
+            0 -> "Bienvenue dans K'TAN ! Pour commencer, construisez votre premier village sur une intersection (un point blanc)."
+            1 -> "Bien joué ! Maintenant, placez une route sur une arête adjacente à votre village."
+            2 -> "Excellent. Placez maintenant votre deuxième village. Notez qu'il vous donnera vos premières ressources de départ !"
+            3 -> "Dernière étape du placement : placez votre deuxième route reliée à votre nouveau village."
+            4 -> "La phase de placement est finie. Cliquez sur 'Lancer' pour jeter les dés et produire des ressources."
+            5 -> "Si le résultat des dés correspond à un de vos terrains, vous gagnez des ressources ! Vous pouvez maintenant échanger ou construire pour gagner des points."
+            else -> null
+        }
+    }
+
+    fun dismissTutorial() {
+        tutorialMessage = null
     }
 
     fun proposeTrade(targetPlayer: Player, offered: Map<ResourceType, Int>, requested: Map<ResourceType, Int>) {
@@ -137,6 +169,11 @@ class GameViewModel : ViewModel() {
             state = state.copy(phase = GamePhase.ROBBER)
         } else {
             produceResources(sum)
+        }
+
+        if (isTutorialMode && tutorialStep == 4) {
+            tutorialStep = 5
+            showTutorialStep()
         }
     }
 
@@ -383,6 +420,11 @@ class GameViewModel : ViewModel() {
 
     private fun advancePlacement() {
         placementStep++
+        if (isTutorialMode && tutorialStep < 4) {
+            tutorialStep++
+            showTutorialStep()
+        }
+
         if (placementStep >= placementOrder.size) {
             state = state.copy(phase = GamePhase.MAIN, currentPlayerIndex = 0)
             stopBuilding()

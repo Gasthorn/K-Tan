@@ -93,3 +93,14 @@ fun demoGame(): BoardState {
         )
     )
 }
+
+fun tutorialGame(): BoardState {
+    val game = newGame(1) // Single player for tutorial
+    return game.copy(
+        phase = GamePhase.PLACEMENT,
+        currentPlayerIndex = 0,
+        players = listOf(
+            Player(1, "Apprenti", Color(0xFFE63946), 0, emptyMap())
+        )
+    )
+}

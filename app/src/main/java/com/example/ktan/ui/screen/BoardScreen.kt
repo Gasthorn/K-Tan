@@ -125,7 +125,7 @@ fun BoardScreen(viewModel: GameViewModel = viewModel(), onQuit: () -> Unit) {
                             } else {
                                 BottomActionBar(
                                     diceResult = localState.diceResult,
-                                    hasRolled = localState.diceResult != null,
+                                    hasRolled = localState.diceResult != null && localState.phase != GamePhase.ROBBER,
                                     onRollDice = { viewModel.rollDice() },
                                     onTrade = { showTradeDialog = true },
                                     onBuild = { showBuildDialog = true },
@@ -170,7 +170,7 @@ fun BoardScreen(viewModel: GameViewModel = viewModel(), onQuit: () -> Unit) {
                     } else {
                         BottomActionBar(
                             diceResult = localState.diceResult,
-                            hasRolled = localState.diceResult != null,
+                            hasRolled = localState.diceResult != null && localState.phase != GamePhase.ROBBER,
                             onRollDice = { viewModel.rollDice() },
                             onTrade = { showTradeDialog = true },
                             onBuild = { showBuildDialog = true },
@@ -279,6 +279,21 @@ fun BoardScreen(viewModel: GameViewModel = viewModel(), onQuit: () -> Unit) {
         MonopolyDialog(
             onSelect = { res -> viewModel.applyMonopoly(res) },
             onDismiss = { viewModel.cancelMonopoly() }
+        )
+    }
+
+    viewModel.tutorialMessage?.let { msg ->
+        AlertDialog(
+            onDismissRequest = { viewModel.dismissTutorial() },
+            containerColor = Color(0xFF1E3A5F),
+            title = { Text("Conseil de l'Apprenti", color = Color(0xFFF1C40F), fontWeight = FontWeight.Bold) },
+            text = { Text(msg, color = Color.White) },
+            confirmButton = {
+                Button(
+                    onClick = { viewModel.dismissTutorial() },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF16A34A))
+                ) { Text("D'accord") }
+            }
         )
     }
 }
