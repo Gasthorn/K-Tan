@@ -47,8 +47,8 @@ fun BottomActionBar(
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     Surface(
-        color = Color(0xFF2E0A05),
-        shadowElevation = 8.dp
+        color = if (isLandscape) Color.Transparent else Color(0xFF2E0A05),
+        shadowElevation = if (isLandscape) 0.dp else 8.dp
     ) {
 
         if (isLandscape) {
@@ -71,7 +71,6 @@ fun BottomActionBar(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     ActionButton(
-                        label = "Échanger",
                         icon = "🔄",
                         enabled = hasRolled,
                         onClick = onTrade,
@@ -79,7 +78,6 @@ fun BottomActionBar(
                     )
 
                     ActionButton(
-                        label = "Construire",
                         icon = "🏗️",
                         enabled = hasRolled,
                         onClick = onBuild,
@@ -87,7 +85,6 @@ fun BottomActionBar(
                     )
                     
                     ActionButton(
-                        label = "Cartes",
                         icon = "🃏",
                         enabled = true,
                         onClick = onDevCards,
@@ -106,7 +103,7 @@ fun BottomActionBar(
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text("✅ Fin de tour", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                    Text("✅", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                 }
             }
         } else {
@@ -130,7 +127,6 @@ fun BottomActionBar(
                 ) {
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         ActionButton(
-                            label = "Échange",
                             icon = "🔄",
                             enabled = hasRolled,
                             onClick = onTrade,
@@ -138,7 +134,6 @@ fun BottomActionBar(
                         )
 
                         ActionButton(
-                            label = "Bâtir",
                             icon = "🏗️",
                             enabled = hasRolled,
                             onClick = onBuild,
@@ -146,7 +141,6 @@ fun BottomActionBar(
                         )
                         
                         ActionButton(
-                            label = "Cartes",
                             icon = "🃏",
                             enabled = true,
                             onClick = onDevCards,
@@ -165,7 +159,7 @@ fun BottomActionBar(
                         ),
                         shape = RoundedCornerShape(8.dp)
                     ) {
-                        Text("✅ Fin de tour", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                        Text("✅", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                     }
                 }
             }
@@ -237,7 +231,7 @@ fun DiceArea(
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("🎲 Lancer", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Text("🎲", fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }
         }
     }
@@ -266,7 +260,6 @@ fun diceFace(n: Int) = when (n) {
 
 @Composable
 fun ActionButton(
-    label: String,
     icon: String,
     enabled: Boolean,
     onClick: () -> Unit,
@@ -283,9 +276,8 @@ fun ActionButton(
         ),
         border = BorderStroke(1.dp, if (enabled) Color(0xFFF1C40F) else Color.White.copy(0.15f))
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(icon, fontSize = 14.sp)
-            Text(label, fontSize = 10.sp)
+        Box(contentAlignment = Alignment.Center) {
+            Text(icon, fontSize = 20.sp)
         }
     }
 }

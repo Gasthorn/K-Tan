@@ -1,5 +1,6 @@
 package com.example.ktan.ui.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -34,92 +35,84 @@ fun BoardScreen(viewModel: GameViewModel = viewModel(), onQuit: () -> Unit) {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Scaffold(
-            containerColor = Color(0xFF5D1D09),
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            "Tour de : ${currentPlayer.name}",
-                            color = Color(0xFFF1C40F),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp
-                        )
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = currentPlayer.color.copy(alpha = 0.9f)
-                    ),
-                    actions = {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF5D1D09))
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            // Hidden box to leave 0.5cm at the top
+            Spacer(modifier = Modifier.height(24.dp))
+            
+            if (isLandscape) {
+                Row(modifier = Modifier.fillMaxSize()) {
+                    // LEFT: Scoreboard
+                    Column(modifier = Modifier.weight(1.4f).fillMaxHeight()) {
+                        // MENU Button at the top of the sidebar
                         OutlinedButton(
                             onClick = onQuit,
                             border = BorderStroke(1.dp, Color(0xFFF1C40F)),
-                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                            modifier = Modifier.height(36.dp)
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(6.dp)
+                                .height(30.dp),
+                            colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Black.copy(alpha = 0.4f))
                         ) {
-                            Text("MENU", color = Color(0xFFF1C40F), fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                            Text("MENU", color = Color(0xFFF1C40F), fontSize = 9.sp, fontWeight = FontWeight.Bold)
                         }
-                        Spacer(Modifier.width(8.dp))
-                        Surface(
-                            color = Color.Black.copy(alpha = 0.3f),
-                            shape = RoundedCornerShape(12.dp)
-                        ) {
-                            Text(
-                                "⭐ ${currentPlayer.victoryPoints} pts",
-                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                                color = Color(0xFFF1C40F),
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                        Spacer(Modifier.width(8.dp))
-                    }
-                )
-            }
-        ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                if (isLandscape) {
-                    Row(modifier = Modifier.fillMaxSize()) {
-                        // LEFT: Scoreboard
-                        Box(modifier = Modifier.weight(1.5f).fillMaxHeight()) {
+
+                        Box(modifier = Modifier.weight(1f)) {
                             ScoreboardRow(
                                 players = localState.players,
                                 currentIndex = localState.currentPlayerIndex,
                                 isLandscape = true
                             )
                         }
+                    }
 
-                        // CENTER: HexBoard
-                        Box(
-                            modifier = Modifier.weight(3.0f).fillMaxHeight(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            HexBoard(
-                                state = localState,
-                                isLandscape = true,
-                                onEdgeClick = { r, c, e ->
-                                    if (viewModel.isBuildingRoad) viewModel.buildRoad(r, c, e)
-                                },
-                                onVertexClick = { r, c, v ->
-                                    if (viewModel.isBuildingSettlement) viewModel.buildSettlement(r, c, v)
-                                    else if (viewModel.isBuildingCity) viewModel.buildCity(r, c, v)
-                                },
-                                onTileClick = { r, c ->
-                                    if (localState.phase == GamePhase.ROBBER) viewModel.moveRobber(r, c)
-                                }
-                            )
-                        }
+                    // CENTER: HexBoard
+                    Box(
+                        modifier = Modifier
+                            .weight(4.0f)
+                            .fillMaxHeight()
+                            .padding(horizontal = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        HexBoard(
+                            state = localState,
+                            isLandscape = true,
+                            onEdgeClick = { r, c, e ->
+                                if (viewModel.isBuildingRoad) viewModel.buildRoad(r, c, e)
+                            },
+                            onVertexClick = { r, c, v ->
+                                if (viewModel.isBuildingSettlement) viewModel.buildSettlement(r, c, v)
+                                else if (viewModel.isBuildingCity) viewModel.buildCity(r, c, v)
+                            },
+                            onTileClick = { r, c ->
+                                if (localState.phase == GamePhase.ROBBER) viewModel.moveRobber(r, c)
+                            }
+                        )
+                    }
 
-                        // RIGHT: Hand + Actions
+                    // RIGHT: Hand + Actions (CONNECTED)
+                    Surface(
+                        modifier = Modifier
+                            .weight(2.0f)
+                            .fillMaxHeight(),
+                        color = Color(0xFF2E0A05),
+                        border = BorderStroke(1.dp, Color(0xFFF1C40F).copy(alpha = 0.2f))
+                    ) {
                         Column(
-                            modifier = Modifier.weight(2.5f).fillMaxHeight(),
-                            verticalArrangement = Arrangement.SpaceBetween
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Top
                         ) {
                             ResourceHand(player = currentPlayer)
-                            
+
+                            HorizontalDivider(color = Color(0xFFF1C40F).copy(alpha = 0.1f), thickness = 1.dp)
+
                             if (localState.phase == GamePhase.PLACEMENT) {
                                 Box(modifier = Modifier.padding(8.dp)) { PlacementInstructions() }
                             } else {
@@ -135,49 +128,67 @@ fun BoardScreen(viewModel: GameViewModel = viewModel(), onQuit: () -> Unit) {
                             }
                         }
                     }
-                } else {
-                    // PORTRAIT
+                }
+            } else {
+                // PORTRAIT
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    // MENU Button at the top
+                    OutlinedButton(
+                        onClick = onQuit,
+                        border = BorderStroke(1.dp, Color(0xFFF1C40F)),
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                            .height(36.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Black.copy(alpha = 0.4f))
+                    ) {
+                        Text("MENU", color = Color(0xFFF1C40F), fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                    }
+
                     ScoreboardRow(
                         players = localState.players,
                         currentIndex = localState.currentPlayerIndex,
                         isLandscape = false
                     )
+                }
 
-                    Box(
-                        modifier = Modifier.weight(1f).fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        HexBoard(
-                            state = localState,
-                            isLandscape = false,
-                            onEdgeClick = { r, c, e ->
-                                if (viewModel.isBuildingRoad) viewModel.buildRoad(r, c, e)
-                            },
-                            onVertexClick = { r, c, v ->
-                                if (viewModel.isBuildingSettlement) viewModel.buildSettlement(r, c, v)
-                                else if (viewModel.isBuildingCity) viewModel.buildCity(r, c, v)
-                            },
-                            onTileClick = { r, c ->
-                                if (localState.phase == GamePhase.ROBBER) viewModel.moveRobber(r, c)
-                            }
-                        )
-                    }
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    HexBoard(
+                        state = localState,
+                        isLandscape = false,
+                        onEdgeClick = { r, c, e ->
+                            if (viewModel.isBuildingRoad) viewModel.buildRoad(r, c, e)
+                        },
+                        onVertexClick = { r, c, v ->
+                            if (viewModel.isBuildingSettlement) viewModel.buildSettlement(r, c, v)
+                            else if (viewModel.isBuildingCity) viewModel.buildCity(r, c, v)
+                        },
+                        onTileClick = { r, c ->
+                            if (localState.phase == GamePhase.ROBBER) viewModel.moveRobber(r, c)
+                        }
+                    )
+                }
 
-                    ResourceHand(player = currentPlayer)
+                ResourceHand(player = currentPlayer)
 
-                    if (localState.phase == GamePhase.PLACEMENT) {
-                        PlacementInstructions()
-                    } else {
-                        BottomActionBar(
-                            diceResult = localState.diceResult,
-                            hasRolled = localState.diceResult != null && localState.phase != GamePhase.ROBBER,
-                            onRollDice = { viewModel.rollDice() },
-                            onTrade = { showTradeDialog = true },
-                            onBuild = { showBuildDialog = true },
-                            onDevCards = { showDevCardsDialog = true },
-                            onEndTurn = { viewModel.nextTurn() }
-                        )
-                    }
+                if (localState.phase == GamePhase.PLACEMENT) {
+                    PlacementInstructions()
+                } else {
+                    BottomActionBar(
+                        diceResult = localState.diceResult,
+                        hasRolled = localState.diceResult != null && localState.phase != GamePhase.ROBBER,
+                        onRollDice = { viewModel.rollDice() },
+                        onTrade = { showTradeDialog = true },
+                        onBuild = { showBuildDialog = true },
+                        onDevCards = { showDevCardsDialog = true },
+                        onEndTurn = { viewModel.nextTurn() }
+                    )
                 }
             }
         }
@@ -196,7 +207,7 @@ fun BoardScreen(viewModel: GameViewModel = viewModel(), onQuit: () -> Unit) {
             Surface(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .padding(top = 64.dp) // Position right below the TopAppBar
+                    .padding(top = 76.dp) // Position right below the spacer and menu
                     .padding(horizontal = 16.dp),
                 color = if (localState.phase == GamePhase.ROBBER) Color(0xFF991B1B) else Color.Black.copy(alpha = 0.8f),
                 shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp),
@@ -217,10 +228,11 @@ fun BoardScreen(viewModel: GameViewModel = viewModel(), onQuit: () -> Unit) {
                         Spacer(Modifier.width(12.dp))
                         Button(
                             onClick = { viewModel.stopBuilding() },
-                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
-                            modifier = Modifier.height(24.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.2f))
-                        ) { Text("Annuler", fontSize = 10.sp, color = Color.White) }
+                            contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp),
+                            modifier = Modifier.size(24.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.2f)),
+                            shape = RoundedCornerShape(4.dp)
+                        ) { Text("✖️", fontSize = 10.sp, color = Color.White) }
                     }
                 }
             }
@@ -295,7 +307,7 @@ fun BoardScreen(viewModel: GameViewModel = viewModel(), onQuit: () -> Unit) {
                         containerColor = Color(0xFFD35400),
                         contentColor = Color(0xFFF1C40F)
                     )
-                ) { Text("D'accord", fontWeight = FontWeight.Bold) }
+                ) { Text("🆗", fontWeight = FontWeight.Bold) }
             }
         )
     }

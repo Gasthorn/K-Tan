@@ -24,8 +24,11 @@ fun OnlineLobbyScreen(onBack: () -> Unit, onJoinRoom: (String) -> Unit) {
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(24.dp)
+            modifier = Modifier.padding(horizontal = 24.dp)
         ) {
+            // Hidden box to leave 0.5cm at the top
+            Spacer(modifier = Modifier.height(24.dp))
+
             Text(
                 "MODE EN LIGNE",
                 color = Color(0xFFF1C40F),

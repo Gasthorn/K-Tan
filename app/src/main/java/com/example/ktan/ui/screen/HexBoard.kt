@@ -143,7 +143,7 @@ private fun calculateBoardGeometry(w: Float, h: Float, isLandscape: Boolean, til
     val rowOffsets = listOf(1f, 0.5f, 0f, 0.5f, 1f)
     
     val baseSize = minOf(w, h) / 8f
-    val hexSize = if (isLandscape) baseSize * 1.1f else baseSize * 0.9f
+    val hexSize = if (isLandscape) baseSize * 1.045f else baseSize * 0.9f
     
     val hexW = hexSize * sqrt(3f)
     val hexH = hexSize * 2f

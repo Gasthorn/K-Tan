@@ -42,10 +42,13 @@ fun StartScreen(onStartGame: (String, Int) -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState)
-                .padding(vertical = 32.dp, horizontal = 16.dp),
+                .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            // Hidden box to leave 0.5cm at the top
+            Spacer(modifier = Modifier.height(24.dp))
+
             if (isLandscape) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -116,28 +119,38 @@ fun ModeSelector(
     val buttonColor = Color(0xFFD35400)
     val textColor = Color(0xFFF1C40F)
 
-    Text(
-        "CHOISISSEZ VOTRE MODE :",
-        color = textColor.copy(alpha = 0.8f),
-        fontSize = 14.sp,
-        fontWeight = FontWeight.Bold
-    )
-    Spacer(modifier = Modifier.height(16.dp))
+    // 1. PRIMARY ACTION: Start Classic Game
+    Button(
+        onClick = { onStartGame("classic", playerCount) },
+        modifier = Modifier
+            .width(280.dp)
+            .height(60.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = buttonColor,
+            contentColor = textColor
+        ),
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, textColor)
+    ) {
+        Text("COMMENCER LA PARTIE", fontSize = 16.sp, fontWeight = FontWeight.ExtraBold)
+    }
 
+    Spacer(modifier = Modifier.height(8.dp))
+
+    // 2. SETTING: Player Count Dropdown
     Box {
-        Button(
+        OutlinedButton(
             onClick = { onExpandRequest(true) },
             modifier = Modifier
                 .width(280.dp)
-                .height(60.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = buttonColor,
-                contentColor = textColor
+                .height(44.dp),
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = textColor.copy(alpha = 0.9f)
             ),
-            shape = RoundedCornerShape(12.dp),
-            border = BorderStroke(1.dp, textColor)
+            shape = RoundedCornerShape(8.dp),
+            border = BorderStroke(1.dp, textColor.copy(alpha = 0.4f))
         ) {
-            Text("MODE CLASSIQUE ($playerCount JOUEURS) ▾", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Text("⚙️ $playerCount JOUEURS ▾", fontSize = 12.sp, fontWeight = FontWeight.Bold)
         }
 
         DropdownMenu(
@@ -164,73 +177,55 @@ fun ModeSelector(
         }
     }
 
-    Spacer(modifier = Modifier.height(12.dp))
-
-    Button(
-        onClick = { onStartGame("classic", playerCount) },
-        modifier = Modifier
-            .width(280.dp)
-            .height(50.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = buttonColor,
-            contentColor = textColor
-        ),
-        shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, textColor)
-    ) {
-        Text("COMMENCER LA PARTIE", fontSize = 14.sp, fontWeight = FontWeight.ExtraBold)
-    }
-
-    Spacer(modifier = Modifier.height(12.dp))
+    Spacer(modifier = Modifier.height(24.dp))
     HorizontalDivider(modifier = Modifier.width(200.dp), color = Color.White.copy(alpha = 0.1f))
-    Spacer(modifier = Modifier.height(12.dp))
+    Spacer(modifier = Modifier.height(24.dp))
 
-    Button(
-        onClick = { onStartGame("demo", 3) },
-        modifier = Modifier
-            .width(280.dp)
-            .height(56.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = buttonColor,
-            contentColor = textColor
-        ),
-        shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, textColor)
-    ) {
-        Text("DÉMONSTRATION", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-    }
+    // 3. OTHER MODES
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Button(
+            onClick = { onStartGame("online", 3) },
+            modifier = Modifier
+                .width(280.dp)
+                .height(56.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = buttonColor,
+                contentColor = textColor
+            ),
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.dp, textColor)
+        ) {
+            Text("EN LIGNE", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+        }
 
-    Spacer(modifier = Modifier.height(12.dp))
+        Button(
+            onClick = { onStartGame("tutorial", 1) },
+            modifier = Modifier
+                .width(280.dp)
+                .height(56.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = buttonColor,
+                contentColor = textColor
+            ),
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.dp, textColor)
+        ) {
+            Text("TUTORIEL", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+        }
 
-    Button(
-        onClick = { onStartGame("tutorial", 1) },
-        modifier = Modifier
-            .width(280.dp)
-            .height(56.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = buttonColor,
-            contentColor = textColor
-        ),
-        shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, textColor)
-    ) {
-        Text("TUTORIEL", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-    }
-
-    Spacer(modifier = Modifier.height(12.dp))
-
-    Button(
-        onClick = { onStartGame("online", 3) },
-        modifier = Modifier
-            .width(280.dp)
-            .height(56.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = buttonColor,
-            contentColor = textColor
-        ),
-        shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, textColor)
-    ) {
-        Text("🌍 EN LIGNE", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+        Button(
+            onClick = { onStartGame("demo", 3) },
+            modifier = Modifier
+                .width(280.dp)
+                .height(56.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = buttonColor,
+                contentColor = textColor
+            ),
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.dp, textColor)
+        ) {
+            Text("DÉMONSTRATION", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+        }
     }
 }

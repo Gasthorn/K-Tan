@@ -48,13 +48,13 @@ fun ScoreboardRow(players: List<Player>, currentIndex: Int, isLandscape: Boolean
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
-                        modifier = Modifier.padding(8.dp).fillMaxWidth(),
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp).fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
                             player.name,
-                            fontSize = 9.sp,
+                            fontSize = 11.sp,
                             fontWeight = FontWeight.Bold,
                             color = if (isActive) Color.White else catanYellow.copy(alpha = 0.8f),
                             textAlign = TextAlign.Start,
@@ -63,7 +63,7 @@ fun ScoreboardRow(players: List<Player>, currentIndex: Int, isLandscape: Boolean
                         )
                         Text(
                             "⭐ ${player.victoryPoints}",
-                            fontSize = 11.sp,
+                            fontSize = 13.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color = catanYellow
                         )
@@ -76,7 +76,7 @@ fun ScoreboardRow(players: List<Player>, currentIndex: Int, isLandscape: Boolean
             modifier = Modifier
                 .fillMaxWidth()
                 .background(themeBrown)
-                .padding(horizontal = 8.dp, vertical = 6.dp),
+                .padding(horizontal = 8.dp, vertical = 12.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             players.forEachIndexed { index, player ->
@@ -90,7 +90,7 @@ fun ScoreboardRow(players: List<Player>, currentIndex: Int, isLandscape: Boolean
                         .padding(horizontal = 3.dp)
                 ) {
                     Column(
-                        modifier = Modifier.padding(6.dp),
+                        modifier = Modifier.padding(10.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
