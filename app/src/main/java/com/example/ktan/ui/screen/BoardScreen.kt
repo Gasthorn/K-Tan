@@ -291,8 +291,11 @@ fun BoardScreen(viewModel: GameViewModel = viewModel(), onQuit: () -> Unit) {
             confirmButton = {
                 Button(
                     onClick = { viewModel.dismissTutorial() },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF16A34A))
-                ) { Text("D'accord") }
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFD35400),
+                        contentColor = Color(0xFFF1C40F)
+                    )
+                ) { Text("D'accord", fontWeight = FontWeight.Bold) }
             }
         )
     }

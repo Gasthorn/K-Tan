@@ -1,5 +1,6 @@
 package com.example.ktan.ui.screen
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -112,9 +113,12 @@ fun ModeSelector(
     onPlayerCountChange: (Int) -> Unit,
     onStartGame: (String, Int) -> Unit
 ) {
+    val buttonColor = Color(0xFFD35400)
+    val textColor = Color(0xFFF1C40F)
+
     Text(
         "CHOISISSEZ VOTRE MODE :",
-        color = Color(0xFFF1C40F).copy(alpha = 0.8f),
+        color = textColor.copy(alpha = 0.8f),
         fontSize = 14.sp,
         fontWeight = FontWeight.Bold
     )
@@ -127,10 +131,11 @@ fun ModeSelector(
                 .width(280.dp)
                 .height(60.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFD35400),
-                contentColor = Color(0xFFF1C40F)
+                containerColor = buttonColor,
+                contentColor = textColor
             ),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.dp, textColor)
         ) {
             Text("MODE CLASSIQUE ($playerCount JOUEURS) ▾", fontSize = 16.sp, fontWeight = FontWeight.Bold)
         }
@@ -143,14 +148,14 @@ fun ModeSelector(
                 .background(Color(0xFF5D1D09))
         ) {
             DropdownMenuItem(
-                text = { Text("3 JOUEURS", color = Color(0xFFF1C40F), fontWeight = FontWeight.Bold) },
+                text = { Text("3 JOUEURS", color = textColor, fontWeight = FontWeight.Bold) },
                 onClick = {
                     onPlayerCountChange(3)
                     onExpandRequest(false)
                 }
             )
             DropdownMenuItem(
-                text = { Text("4 JOUEURS", color = Color(0xFFF1C40F), fontWeight = FontWeight.Bold) },
+                text = { Text("4 JOUEURS", color = textColor, fontWeight = FontWeight.Bold) },
                 onClick = {
                     onPlayerCountChange(4)
                     onExpandRequest(false)
@@ -167,10 +172,11 @@ fun ModeSelector(
             .width(280.dp)
             .height(50.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF16A34A),
-            contentColor = Color.White
+            containerColor = buttonColor,
+            contentColor = textColor
         ),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, textColor)
     ) {
         Text("COMMENCER LA PARTIE", fontSize = 14.sp, fontWeight = FontWeight.ExtraBold)
     }
@@ -185,11 +191,11 @@ fun ModeSelector(
             .width(280.dp)
             .height(56.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF2E0A05),
-            contentColor = Color(0xFFF1C40F)
+            containerColor = buttonColor,
+            contentColor = textColor
         ),
         shape = RoundedCornerShape(12.dp),
-        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFF1C40F))
+        border = BorderStroke(1.dp, textColor)
     ) {
         Text("DÉMONSTRATION", fontSize = 16.sp, fontWeight = FontWeight.Bold)
     }
@@ -202,10 +208,11 @@ fun ModeSelector(
             .width(280.dp)
             .height(56.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF2563EB),
-            contentColor = Color.White
+            containerColor = buttonColor,
+            contentColor = textColor
         ),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, textColor)
     ) {
         Text("TUTORIEL", fontSize = 16.sp, fontWeight = FontWeight.Bold)
     }
@@ -218,10 +225,11 @@ fun ModeSelector(
             .width(280.dp)
             .height(56.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF9333EA),
-            contentColor = Color.White
+            containerColor = buttonColor,
+            contentColor = textColor
         ),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, textColor)
     ) {
         Text("🌍 EN LIGNE", fontSize = 16.sp, fontWeight = FontWeight.Bold)
     }
